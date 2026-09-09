@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<!-- lang="fr": the whole deck is in French.
+     Screen readers use this to pick the right voice. RGAA 8.3 -->
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ce que j'ai appris sur la réalité du web accessible — Interface3</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f0c8a0;
+      --bg-alt: #e8b88e;
+      --light: #f7dec6;
+      --ink: #1a1a1a;
+
+      --display: Syne, "Trebuchet MS", sans-serif;
+      --body: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--body);
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    .t-display-hero {
+      font-family: var(--display);
+      font-size: clamp(2.4rem, 5.6vw, 5.4rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+
+    .t-headline {
+      font-family: var(--display);
+      font-size: clamp(2rem, 4.4vw, 4rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+
+    .t-display {
+      font-family: var(--display);
+      font-size: clamp(2.6rem, 6.5vw, 6rem);
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .t-eyebrow {
+      font-family: var(--body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin: 0 0 1rem;
+    }
+
+    .t-body-md {
+      font-size: 1.15rem;
+      font-weight: 500;
+      line-height: 1.6;
+      max-width: 46ch;
+      margin: 1.25rem 0 0;
+    }
+
+    .t-caption {
+      font-size: 0.9rem;
+      font-weight: 500;
+      line-height: 1.4;
+      margin: 0.9rem 0 0;
+    }
+
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 4rem 5rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Slides take focus by script, never with Tab. */
+    .slide:focus {
+      outline: none;
+    }
+
+    .slide--cover {
+      padding: 4rem 5rem 5rem;
+    }
+
+    .slide__inner {
+      position: relative;
+      z-index: 2;
+      max-width: 74rem;
+      width: 100%;
+      margin-inline: auto;
+    }
+
+    /* Two-column split for slides that pair text with an image. */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    /* ============================================================
+       4. FOCUS
+       Charcoal, like every other mark in the system.
+       ============================================================ */
+    :is(a, button, video):focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 4px;
+    }
+
+    /* ============================================================
+       5. ROUGH BOX
+       Signature depth: a 3px outline plus a second, offset outline
+       drawn by ::before. No blur, no shadow.
+       ============================================================ */
+    .rough {
+      position: relative;
+      border: 3px solid var(--ink);
+      background: var(--bg);
+      padding: 1.5rem;
+    }
+
+    .rough::before {
+      content: "";
+      position: absolute;
+      inset: 7px -7px -7px 7px;
+      border: 2px solid var(--ink);
+      pointer-events: none;
+    }
+
+    /* Inverted card: the emphasis device of the system. */
+    .filled {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    /* Rotations alternate so nothing reads as snapped to a grid. */
+    .rot-l {
+      transform: rotate(-1.5deg);
+    }
+
+    .rot-r {
+      transform: rotate(1.5deg);
+    }
+
+    .rot-l-sm {
+      transform: rotate(-0.7deg);
+    }
+
+    /* ============================================================
+       6. MEDIA FRAMES
+       ============================================================ */
+    .frame {
+      position: relative;
+      border: 3px solid var(--ink);
+      background: var(--bg-alt);
+      line-height: 0;
+    }
+
+    .frame::before {
+      content: "";
+      position: absolute;
+      inset: 8px -8px -8px 8px;
+      border: 2px solid var(--ink);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .frame video,
+    .frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 62vh;
+      object-fit: contain;
+      background: var(--ink);
+    }
+
+    .frame--tall img {
+      max-height: 66vh;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    /* ============================================================
+       7. DOODLES
+       Hand-drawn punctuation in the negative space.
+       Decorative only, so hidden from screen readers.
+       ============================================================ */
+    .doodle {
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .doodle svg {
+      stroke: var(--ink);
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .blob-out {
+      position: absolute;
+      border: 3px solid var(--ink);
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .blob-fill {
+      position: absolute;
+      background: var(--ink);
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Oversized watermark cloud behind the content. */
+    .ghost {
+      position: absolute;
+      background: var(--ink);
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Magazine-spine label anchored to the right edge. */
+    .spine {
+      position: absolute;
+      right: -1.5rem;
+      top: 50%;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      transform: rotate(90deg);
+      transform-origin: center;
+      white-space: nowrap;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       8. CHROME
+       Progress bar plus a nav cluster at bottom right.
+       Real buttons, so a mouse or touch user is not stuck with
+       keyboard shortcuts only.
+       ============================================================ */
+    .progress {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      height: 4px;
+      background: var(--ink);
+      width: 0;
+      transition: width 0.4s ease;
+      z-index: 20;
+    }
+
+    .nav {
+      position: fixed;
+      right: 2rem;
+      bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 20;
+    }
+
+    .nav button {
+      width: 48px;
+      height: 48px;
+      border: 2px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .nav button:hover {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .nav__count {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1rem;
+      font-variant-numeric: tabular-nums;
+      padding: 0 0.5rem;
+      margin: 0;
+    }
+
+    /* ============================================================
+       9. SCREEN READER ONLY
+       ============================================================ */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ============================================================
+       10. RESPONSIVE
+       ============================================================ */
+    @media (max-width: 768px) {
+      .slide {
+        padding: 2rem;
+        justify-content: flex-start;
+        overflow-y: auto;
+      }
+
+      .split {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .spine,
+      .doodle {
+        display: none;
+      }
+    }
+
+    /* ============================================================
+       11. REDUCED MOTION
+       WCAG 2.3.3
+       ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Live region: announces the slide number after every change.
+       Mounted empty from the start, because a screen reader only
+       reads a region it was already watching. -->
+  <p class="sr-only" role="status" aria-live="polite" id="announcer"></p>
+
+  <main id="deck">
+
+    <!-- 1 — Couverture -->
+    <section class="slide slide--cover active" tabindex="-1" aria-labelledby="s1">
+      <div class="ghost" style="width:46vw;height:46vw;right:-10vw;bottom:-14vw;"></div>
+      <div class="doodle" style="top:12%;right:14%;" aria-hidden="true">
+        <svg width="120" height="70" viewBox="0 0 120 70">
+          <path d="M5 45 Q 25 5, 45 45 T 85 45 T 115 30" />
+        </svg>
+      </div>
+      <div class="blob-out" style="width:150px;height:150px;left:6%;bottom:16%;"></div>
+
+      <div class="slide__inner">
+        <h1 class="t-display-hero" id="s1">Ce que j'ai appris sur la réalité du web accessible.</h1>
+        <p class="t-eyebrow" style="margin:2.5rem 0 0;">Présentation de fin de formation · Interface3 · septembre 2026
+        </p>
+      </div>
+    </section>
+
+    <!-- 2 — Ce que je croyais savoir -->
+    <section class="slide" tabindex="-1" aria-labelledby="s2">
+      <div class="doodle" style="top:10%;left:6%;" aria-hidden="true">
+        <svg width="70" height="70" viewBox="0 0 70 70">
+          <path d="M35 5 L42 26 L64 26 L46 39 L53 61 L35 47 L17 61 L24 39 L6 26 L28 26 Z" />
+        </svg>
+      </div>
+
+      <div class="slide__inner split">
+        <div>
+          <h2 class="t-headline" id="s2">Ce que je croyais savoir</h2>
+        </div>
+        <figure class="frame rot-r">
+          <img src="media/meme-addon.jpg" width="1400" height="933"
+            alt="Meme. Une chanteuse salue triomphalement le public sur scène. Légende : « Old me presenting the results of my single add-on accessibility check. »">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 3 — Une application React, c'est quoi ? -->
+    <section class="slide" tabindex="-1" aria-labelledby="s3">
+      <div class="blob-fill" style="width:90px;height:90px;left:4%;bottom:12%;"></div>
+
+      <div class="slide__inner split">
+        <div>
+          <h2 class="t-headline" id="s3">Une application React, c'est quoi ?</h2>
+          <p class="t-body-md">
+            Une seule page dont on remplace le contenu à la volée. Des composants apparaissent
+            et disparaissent, sans que la page ne se recharge jamais.
+          </p>
+        </div>
+        <figure class="frame rot-l" style="background:var(--light);">
+          <img src="media/spa-vs-classique.png" width="1200" height="1076"
+            alt="Schéma comparatif. À gauche, SPA : seule une zone de la page se recharge, marquée par une flèche circulaire. À droite, site web classique : toute la page se recharge d'un bloc.">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 4 — Ce que les tests révèlent -->
+    <section class="slide" tabindex="-1" aria-labelledby="s4">
+      <div class="doodle" style="bottom:14%;left:8%;" aria-hidden="true">
+        <svg width="110" height="50" viewBox="0 0 110 50">
+          <path d="M5 25 H 92" />
+          <path d="M78 10 L 95 25 L 78 40" />
+        </svg>
+      </div>
+
+      <div class="slide__inner split">
+        <div>
+          <h2 class="t-headline" id="s4">Ce que les tests révèlent</h2>
+          <div class="rough rot-l-sm"
+            style="display:flex;align-items:center;gap:1.25rem;margin-top:2rem;max-width:26rem;">
+            <img src="media/nvda-logo.png" width="400" height="400" alt="Logo NVDA"
+              style="width:56px;height:56px;display:block;">
+            <p class="t-body-md" style="margin:0;">NonVisual Desktop Access (NVDA)</p>
+          </div>
+        </div>
+        <figure class="frame frame--tall rot-r">
+          <img src="media/meme-user-tests.jpg" width="800" height="1000"
+            alt="Meme en six vignettes. « Our app is fully accessible. » « How many user tests did you do ? » « We are 100 % WCAG 2.1 AA compliant. » « How many user test ? » « None. » « Thanks you. »">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 5 — Démo 1 : Sur un site classique -->
+    <section class="slide" tabindex="-1" aria-labelledby="s5">
+      <div class="blob-out" style="width:110px;height:110px;right:3%;top:12%;"></div>
+
+      <div class="slide__inner split">
+        <div>
+          <p class="t-eyebrow">Démo 1 : navigation avec NVDA</p>
+          <h2 class="t-headline" id="s5">Sur un site classique</h2>
+          <p class="t-caption">Belgium.be (multi page HTML)</p>
+        </div>
+        <figure class="frame rot-l">
+          <!-- controls: the browser player is keyboard accessible out of the box.
+               preload="auto": download now, not when I press play, so there is
+               no loading spinner in front of the room.
+               poster: a still frame instead of a black rectangle.
+               No autoplay: I decide when each clip starts. -->
+          <video src="media/demo1-nvda-multipage.mp4" poster="media/poster-demo1.jpg" controls preload="auto"
+            aria-labelledby="s5"></video>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 6 — Sur un App React … -->
+    <section class="slide" tabindex="-1" aria-labelledby="s6">
+      <div class="doodle" style="top:14%;left:5%;" aria-hidden="true">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="32" />
+          <circle cx="40" cy="40" r="18" />
+        </svg>
+      </div>
+
+      <div class="slide__inner split">
+        <div>
+          <h2 class="t-headline" id="s6">Sur un App React …</h2>
+          <p class="t-caption">chat.maite.tech</p>
+        </div>
+        <figure class="frame rot-r">
+          <video src="media/demo2-nvda-spa.mp4" poster="media/poster-demo2.jpg" controls preload="auto"
+            aria-labelledby="s6"></video>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 7 — RouteAnnouncer -->
+    <section class="slide" tabindex="-1" aria-labelledby="s7">
+      <p class="spine" aria-hidden="true">RouteAnnouncer</p>
+      <div class="ghost" style="width:34vw;height:34vw;left:-8vw;top:-8vw;"></div>
+
+      <div class="slide__inner">
+        <h2 class="t-headline" id="s7" style="margin-bottom:1.75rem;">RouteAnnouncer</h2>
+        <figure class="frame rot-l-sm" style="background:var(--light);">
+          <img src="media/code-routeannouncer.png" width="1546" height="841"
+            alt="Capture de l'éditeur montrant le composant RouteAnnouncer : useLocation détecte le changement d'URL, un useRef ignore le chargement initial, un requestAnimationFrame attend une image avant de lire document.title, et le composant retourne un paragraphe sr-only avec role status et aria-live polite."
+            style="max-height:64vh;object-fit:contain;background:var(--light);">
+        </figure>
+      </div>
+    </section>
+
+    <!-- 8 — Démo 2, clip 1 -->
+    <section class="slide" tabindex="-1" aria-labelledby="s8">
+      <div class="blob-fill" style="width:70px;height:70px;right:6%;bottom:16%;"></div>
+
+      <div class="slide__inner split">
+        <div>
+          <p class="t-eyebrow">Démo 2 : Le Piège du Focus Perdu</p>
+          <h2 class="t-headline" id="s8">Quand un bouton disparaît sous le curseur</h2>
+        </div>
+        <figure class="frame rot-r">
+          <video src="media/focus-rescue-1.mp4" poster="media/poster-focus-1.jpg" controls preload="auto"
+            aria-labelledby="s8"></video>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 9 — Démo 2, clip 2 -->
+    <section class="slide" tabindex="-1" aria-labelledby="s9">
+      <div class="doodle" style="bottom:12%;left:6%;" aria-hidden="true">
+        <svg width="130" height="40" viewBox="0 0 130 40">
+          <path d="M5 20 Q 20 2, 35 20 T 65 20 T 95 20 T 125 20" />
+        </svg>
+      </div>
+
+      <div class="slide__inner split">
+        <div>
+          <p class="t-eyebrow">Démo 2 : Le Piège du Focus Perdu</p>
+          <h2 class="t-headline" id="s9">Focus Rescue : Rétablir le Fil</h2>
+        </div>
+        <figure class="frame rot-l">
+          <video src="media/focus-rescue-2.mp4" poster="media/poster-focus-2.jpg" controls preload="auto"
+            aria-labelledby="s9"></video>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 10 — Démo 3 -->
+    <section class="slide" tabindex="-1" aria-labelledby="s10">
+      <div class="blob-out" style="width:130px;height:130px;left:4%;top:14%;"></div>
+
+      <div class="slide__inner">
+        <h2 class="t-headline" id="s10" style="margin-bottom:1.75rem;">Démo 3 : L'Attribut Lang et la Voix</h2>
+        <figure class="frame rot-r" style="max-width:56rem;">
+          <video src="media/attribut-lang.mp4" poster="media/poster-lang.jpg" controls preload="auto"
+            aria-labelledby="s10"></video>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 11 — Merci -->
+    <section class="slide slide--cover" tabindex="-1" aria-labelledby="s11">
+      <div class="ghost" style="width:44vw;height:44vw;right:-12vw;top:-10vw;"></div>
+      <div class="doodle" style="bottom:18%;left:8%;" aria-hidden="true">
+        <svg width="150" height="80" viewBox="0 0 150 80">
+          <path d="M5 60 Q 30 5, 55 55 T 105 40 T 145 55" />
+        </svg>
+      </div>
+      <div class="blob-fill" style="width:110px;height:110px;right:12%;bottom:20%;"></div>
+
+      <div class="slide__inner">
+        <h2 class="t-display" id="s11">Merci de votre écoute !</h2>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="progress" id="progress"></div>
+
+  <nav class="nav" aria-label="Navigation du diaporama">
+    <button type="button" id="prev">
+      <span aria-hidden="true">&larr;</span>
+      <span class="sr-only">Diapositive précédente</span>
+    </button>
+    <p class="nav__count" id="count"></p>
+    <button type="button" id="next">
+      <span aria-hidden="true">&rarr;</span>
+      <span class="sr-only">Diapositive suivante</span>
+    </button>
+  </nav>
+
+  <script>
+    // ============================================================
+    // Show one slide at a time.
+    // The .active class controls opacity AND visibility. Hidden
+    // slides are removed from the accessibility tree and from the
+    // tab order, so a screen reader never reads an off-screen slide.
+    // ============================================================
+
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const announcer = document.getElementById('announcer');
+    const count = document.getElementById('count');
+    const progress = document.getElementById('progress');
+    let index = 0;
+
+    function render() {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+
+        // Stop any video as soon as we leave its slide.
+        // Sound running under the next slide is confusing.
+        if (i !== index) slide.querySelector('video')?.pause();
+      });
+
+      count.textContent = `${index + 1} / ${slides.length}`;
+      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+
+      // Move focus to the slide, so the screen reader reads the new
+      // content and the keyboard user is in the right place.
+      slides[index].focus();
+
+      announcer.textContent = `Diapositive ${index + 1} sur ${slides.length}`;
+    }
+
+    function go(step) {
+      const next = index + step;
+      if (next < 0 || next >= slides.length) return;
+      index = next;
+      render();
+    }
+
+    document.getElementById('next').addEventListener('click', () => go(1));
+    document.getElementById('prev').addEventListener('click', () => go(-1));
+
+    document.addEventListener('keydown', (e) => {
+      // Never steal a key while the video player has focus:
+      // its native controls need the arrows and the space bar.
+      const tag = document.activeElement?.tagName;
+      if (tag === 'VIDEO' || tag === 'BUTTON') return;
+
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(-1); }
+      if (e.key === 'Home') { e.preventDefault(); index = 0; render(); }
+      if (e.key === 'End') { e.preventDefault(); index = slides.length - 1; render(); }
+    });
+
+    // Touch swipe on mobile.
+    let startX = null;
+    document.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      if (startX === null) return;
+      const delta = e.changedTouches[0].clientX - startX;
+      if (Math.abs(delta) > 60) go(delta < 0 ? 1 : -1);
+      startX = null;
+    });
+
+    render();
+  </script>
+
+</body>
+
+</html>
