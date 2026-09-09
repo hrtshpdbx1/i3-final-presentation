@@ -336,11 +336,6 @@ figure {
    Hand-drawn punctuation in the negative space.
    Decorative only, so hidden from screen readers.
    ============================================================ */
-.afraid {
-   position: absolute;
-   z-index: 1;
-   max-width: 5vw;
-}
 
 
 .blob-out {
@@ -607,9 +602,11 @@ figure {
 
 /* Small reaction mark, up and left of the title. */
 #slide-1 .afraid {
-   top: 16%;
-   left: 78%;
-   width: 124px;
+   bottom: 0%;
+   left: 48%;
+   position: absolute;
+   z-index: 1;
+   width: 20%;
 }
 
 /* Big anchor, bottom right, sitting inside the ghost blob. */
@@ -889,10 +886,12 @@ figure {
 .drop__item:nth-child(2) { --x: 76%; --y: 26%; --size: 7.5vw; --tilt: 6deg;  --delay: 0.18s; --dur: 1.35s; --fall: fall-right; }
 .drop__item:nth-child(3) { --x: 18%; --y: 63%; --size: 10vw;  --tilt: 5deg;  --delay: 0.34s; --dur: 0.95s; --fall: fall-right; }
 .drop__item:nth-child(4) { --x: 64%; --y: 68%; --size: 8vw;   --tilt: -11deg;--delay: 0.55s; --dur: 1.25s; --fall: fall-left; }
-.drop__item:nth-child(5) { --x: 42%; --y: 30%; --size: 6.5vw; --tilt: 9deg;  --delay: 0.72s; --dur: 1.05s; --fall: fall-right; }
+.drop__item:nth-child(5) { --x: 42%; --y: 30%; --size: 8.5vw; --tilt: 9deg;  --delay: 0.72s; --dur: 1.05s; --fall: fall-right; }
 .drop__item:nth-child(6) { --x: 80%; --y: 46%; --size: 7vw;   --tilt: -6deg; --delay: 0.9s;  --dur: 1.4s;  --fall: fall-left; }
-.drop__item:nth-child(7) { --x: 24%; --y: 58%; --size: 6vw;   --tilt: 12deg; --delay: 1.08s; --dur: 1.15s; --fall: fall-left; }
+.drop__item:nth-child(7) { --x: 44%; --y: 58%; --size: 6vw;   --tilt: 12deg; --delay: 1.08s; --dur: 1.15s; --fall: fall-left; }
 .drop__item:nth-child(8) { --x: 38%; --y: 78%; --size: 8.5vw; --tilt: -4deg; --delay: 1.26s; --dur: 1s;    --fall: fall-right; }
+.drop__item:nth-child(9) { --x: 60%; --y: 40%; --size: 8.5vw; --tilt: 6deg;  --delay: 1.44s; --dur: 0.95s; --fall: fall-left; }
+.drop__item:nth-child(10) { --x: 18%; --y: 27%; --size: 6.5vw; --tilt: 6deg;  --delay: 1.44s; --dur: 0.95s; --fall: fall-left; }
 
 .confetti {
    position: absolute;
@@ -962,7 +961,7 @@ figure {
 /* Legend for the asterisk, running up the right edge.
    .spine already handles the rotation and the display face. */
 .spine--legend {
-   font-size: 0.9rem;
+   font-size: 1.1rem;
    font-weight: 600;
    font-family: var(--body);
    letter-spacing: 0.08em;
