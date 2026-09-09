@@ -491,7 +491,7 @@ figure {
    ============================================================ */
 @media (max-width: 768px) {
    .slide {
-      padding: 2rem 1.5rem 6rem;
+      padding: 2rem 1.5rem 7rem;
       justify-content: flex-start;
       overflow-y: auto;
    }
@@ -510,8 +510,64 @@ figure {
    }
 
    .spine,
-   .doodle {
+   .doodle,
+   .afraid {
       display: none;
+   }
+
+   /* --- Slide 4 -------------------------------------------
+      The portrait meme runs under the nav cluster. Cap it so
+      the whole slide fits without scrolling into the buttons. */
+   .frame--tall:has(img) img {
+      max-height: 42vh;
+   }
+
+   /* --- Slide 11 ------------------------------------------
+      Back to normal flow. Absolute positioning was pushing the
+      heading off the top and stacking the button under the nav. */
+   #slide-11 .slide__inner {
+      position: static;
+      pointer-events: auto;
+   }
+
+   /* The hearts keep their scattered layout but shrink, and the
+      whole rain is pulled away from the heading and the chrome. */
+   .drop {
+      inset: 18vh 0 14vh;
+   }
+
+   .drop__item {
+      /* vw is far too big on a narrow screen: 9vw was 35px. */
+      width: clamp(52px, 16vw, 90px);
+   }
+
+   .confetti span {
+      font-size: 1.5rem;
+   }
+
+   /* The pause button sits above the slide nav instead of
+      beside it, where the two overlapped. */
+   .drop-toggle {
+      left: 1.5rem;
+      right: 1.5rem;
+      bottom: 5.5rem;
+      text-align: center;
+   }
+
+   /* --- Nav cluster ---------------------------------------
+      A real background, so slide content never shows through
+      the buttons. */
+   .nav {
+      right: 1.5rem;
+      bottom: 1rem;
+      padding: 0.4rem;
+      background: var(--bg);
+      border: 2px solid var(--ink);
+   }
+
+   .nav button {
+      width: 44px;
+      height: 44px;
    }
 }
 
