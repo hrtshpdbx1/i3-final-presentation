@@ -1,0 +1,587 @@
+/* ============================================================
+   1. TOKENS — Playful
+   One canvas colour, one ink colour. Nothing else.
+   ============================================================ */
+:root {
+   --bg: #f0c8a0;
+   --bg-alt: #e8b88e;
+   --light: #f7dec6;
+   --ink: #1a1a1a;
+
+   --display: Syne, "Trebuchet MS", sans-serif;
+   --body: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+
+   /* Room kept free on every slide so the offset border of a card
+      is never clipped by the slide edge. */
+   --pad-x: clamp(2rem, 4vw, 4rem);
+   --pad-top: clamp(2rem, 3.5vh, 3rem);
+   --pad-bottom: 6.5rem;
+}
+
+*,
+*::before,
+*::after {
+   box-sizing: border-box;
+}
+
+html,
+body {
+   height: 100%;
+   overflow: hidden;
+}
+
+body {
+   margin: 0;
+   background: var(--bg);
+   color: var(--ink);
+   font-family: var(--body);
+   font-weight: 400;
+   line-height: 1.7;
+}
+
+/* ============================================================
+   2. TYPE SCALE
+   Syne for every display moment, always with negative tracking.
+   Space Grotesk for body and labels.
+   ============================================================ */
+.t-display-hero {
+   font-family: var(--display);
+   font-size: clamp(2.4rem, 5.6vw, 5.4rem);
+   font-weight: 800;
+   line-height: 0.95;
+   letter-spacing: -0.03em;
+   margin: 0;
+}
+
+.t-headline {
+   font-family: var(--display);
+   font-size: clamp(1.8rem, 3.8vw, 3.4rem);
+   font-weight: 700;
+   line-height: 1;
+   letter-spacing: -0.01em;
+   margin: 0;
+}
+
+/* Subtitle under the cover title: same face, smaller step. */
+.t-headline--sub {
+   font-size: clamp(1.3rem, 2.2vw, 2rem);
+   font-weight: 700;
+   line-height: 1.15;
+   margin: 1.25rem 0 0;
+   max-width: 26ch;
+}
+
+.t-headline--spaced {
+   margin-bottom: 1.5rem;
+}
+
+.t-display {
+   font-family: var(--display);
+   font-size: clamp(2.6rem, 6.5vw, 6rem);
+   font-weight: 800;
+   line-height: 0.9;
+   letter-spacing: -0.02em;
+   margin: 0;
+}
+
+.t-eyebrow {
+   font-family: var(--body);
+   font-size: 0.85rem;
+   font-weight: 600;
+   line-height: 1.2;
+   letter-spacing: 0.15em;
+   text-transform: uppercase;
+   margin: 0 0 1rem;
+}
+
+.t-eyebrow--under {
+   margin: 2.5rem 0 0;
+}
+
+.t-body-md {
+   font-size: 1.1rem;
+   font-weight: 500;
+   line-height: 1.6;
+   max-width: 42ch;
+   margin: 1.25rem 0 0;
+}
+
+.t-body-md--flush {
+   margin: 0;
+}
+
+.t-caption {
+   font-size: 0.9rem;
+   font-weight: 500;
+   line-height: 1.4;
+   margin: 0.9rem 0 0;
+}
+
+/* ============================================================
+   3. SLIDES
+   Only the active slide is visible. visibility:hidden also
+   removes the others from the accessibility tree and from the
+   tab order, so a screen reader never reads an off-screen slide.
+   ============================================================ */
+.slide {
+   position: absolute;
+   inset: 0;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+   opacity: 0;
+   visibility: hidden;
+   transition: opacity 0.6s ease;
+   overflow: hidden;
+}
+
+.slide.active {
+   opacity: 1;
+   visibility: visible;
+}
+
+/* Slides take focus by script, never with Tab. */
+.slide:focus {
+   outline: none;
+}
+
+.slide--cover {
+   padding-inline: clamp(2rem, 5vw, 5rem);
+}
+
+.slide__inner {
+   position: relative;
+   z-index: 2;
+   width: 100%;
+   max-width: 84rem;
+   margin-inline: auto;
+   /* The offset border sticks out 8px down and right.
+      This keeps it inside the slide instead of clipped. */
+   padding: 0 10px 10px 0;
+}
+
+/* Single-column slides: a tighter column reads better than a
+   full-width block of media. */
+.slide__inner--narrow {
+   max-width: 68rem;
+}
+
+/* ============================================================
+   4. SPLIT LAYOUT
+   ============================================================ */
+.split {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: clamp(1.5rem, 3vw, 3rem);
+   align-items: center;
+}
+
+/* Video slides: text needs a caption's worth of room, the clip
+   needs everything else. */
+.split--media {
+   grid-template-columns: minmax(14rem, 0.72fr) 1.28fr;
+}
+
+/* ============================================================
+   5. FOCUS
+   Charcoal, like every other mark in the system.
+   ============================================================ */
+:is(a, button, video):focus-visible {
+   outline: 3px solid var(--ink);
+   outline-offset: 4px;
+}
+
+/* ============================================================
+   6. ROUGH BOX
+   Signature depth: a 3px outline plus a second, offset outline
+   drawn by ::before. No blur, no shadow.
+   ============================================================ */
+.rough {
+   position: relative;
+   border: 3px solid var(--ink);
+   background: var(--bg);
+   padding: 1.5rem;
+}
+
+.rough::before {
+   content: "";
+   position: absolute;
+   inset: 7px -7px -7px 7px;
+   border: 2px solid var(--ink);
+   pointer-events: none;
+}
+
+/* Card that holds the NVDA logo next to the name it labels. */
+.rough--inline {
+   display: flex;
+   align-items: center;
+   gap: 1.25rem;
+   margin-top: 2rem;
+   max-width: 28rem;
+}
+
+.rough--inline .logo {
+   width: 64px;
+   height: 64px;
+   flex-shrink: 0;
+   display: block;
+}
+
+/* Inverted card: the emphasis device of the system. */
+.filled {
+   background: var(--ink);
+   color: var(--bg);
+}
+
+/* ============================================================
+   7. MEDIA FRAMES
+   ============================================================ */
+.frame {
+   position: relative;
+   border: 3px solid var(--ink);
+   background: var(--bg-alt);
+   line-height: 0;
+}
+
+.frame::before {
+   content: "";
+   position: absolute;
+   inset: 8px -8px -8px 8px;
+   border: 2px solid var(--ink);
+   pointer-events: none;
+   z-index: -1;
+}
+
+/* An image keeps its own shape, so the frame shrinks to fit it.
+   Without this the border stretches across the whole column and
+   object-fit leaves empty bands on both sides of a portrait image.
+   A video is different: it always fills its frame. */
+.frame:has(img) {
+   width: fit-content;
+   max-width: 100%;
+   margin-inline: auto;
+}
+
+.frame:has(img) img {
+   width: auto;
+   max-width: 100%;
+   height: auto;
+   max-height: 68vh;
+   display: block;
+   background: transparent;
+}
+
+.frame video {
+   display: block;
+   width: 100%;
+   height: auto;
+   max-height: 74vh;
+   background: var(--ink);
+}
+
+/* Portrait image: capped a little lower so the card next to it
+   stays on screen. */
+.frame--tall:has(img) img {
+   max-height: 64vh;
+}
+
+.frame--light {
+   background: var(--light);
+}
+
+/* The code screenshot must stay readable, so it is never cropped. */
+.frame--code:has(img) img {
+   max-height: 66vh;
+   background: var(--light);
+}
+
+.frame--wide {
+   max-width: 64rem;
+   margin-inline: auto;
+}
+
+figure {
+   margin: 0;
+}
+
+/* ============================================================
+   8. DOODLES
+   Hand-drawn punctuation in the negative space.
+   Decorative only, so hidden from screen readers.
+   ============================================================ */
+.doodle {
+   position: absolute;
+   z-index: 1;
+   pointer-events: none;
+}
+
+.doodle svg {
+   stroke: var(--ink);
+   stroke-width: 2;
+   fill: none;
+   stroke-linecap: round;
+}
+
+.blob-out {
+   position: absolute;
+   border: 3px solid var(--ink);
+   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+   pointer-events: none;
+   z-index: 1;
+}
+
+.blob-fill {
+   position: absolute;
+   background: var(--ink);
+   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+   pointer-events: none;
+   z-index: 1;
+}
+
+/* Oversized watermark cloud behind the content. */
+.ghost {
+   position: absolute;
+   background: var(--ink);
+   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+   opacity: 0.08;
+   pointer-events: none;
+   z-index: 0;
+}
+
+/* Magazine-spine label anchored to the right edge. */
+.spine {
+   position: absolute;
+   right: -1.5rem;
+   top: 50%;
+   font-family: var(--display);
+   font-weight: 700;
+   font-size: 1.1rem;
+   letter-spacing: 0.1em;
+   transform: rotate(90deg);
+   transform-origin: center;
+   white-space: nowrap;
+   z-index: 1;
+}
+
+/* ============================================================
+   9. CHROME
+   Progress bar plus a nav cluster at bottom right.
+   Real buttons, so a mouse or touch user is not stuck with
+   keyboard shortcuts only.
+   ============================================================ */
+.progress {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   height: 4px;
+   background: var(--ink);
+   width: 0;
+   transition: width 0.4s ease;
+   z-index: 20;
+}
+
+.nav {
+   position: fixed;
+   right: 2rem;
+   bottom: 1.5rem;
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   z-index: 20;
+}
+
+.nav button {
+   width: 48px;
+   height: 48px;
+   border: 2px solid var(--ink);
+   background: var(--bg);
+   color: var(--ink);
+   font-family: var(--display);
+   font-size: 1.2rem;
+   font-weight: 800;
+   cursor: pointer;
+   line-height: 1;
+}
+
+.nav button:hover {
+   background: var(--ink);
+   color: var(--bg);
+}
+
+.nav__count {
+   font-family: var(--display);
+   font-weight: 800;
+   font-size: 1rem;
+   font-variant-numeric: tabular-nums;
+   padding: 0 0.5rem;
+   margin: 0;
+}
+
+/* ============================================================
+   10. SCREEN READER ONLY
+   ============================================================ */
+.sr-only {
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   padding: 0;
+   margin: -1px;
+   overflow: hidden;
+   clip: rect(0 0 0 0);
+   white-space: nowrap;
+   border: 0;
+}
+
+/* ============================================================
+   11. RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+   .slide {
+      padding: 2rem 1.5rem 6rem;
+      justify-content: flex-start;
+      overflow-y: auto;
+   }
+
+   .split,
+   .split--media {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+   }
+
+   .frame video,
+   .frame:has(img) img,
+   .frame--tall:has(img) img,
+   .frame--code:has(img) img {
+      max-height: 50vh;
+   }
+
+   .spine,
+   .doodle {
+      display: none;
+   }
+}
+
+/* ============================================================
+   12. REDUCED MOTION
+   WCAG 2.3.3
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+
+   *,
+   *::before,
+   *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+   }
+}
+
+/* ============================================================
+   13. DECORATION PLACEMENT
+   One rule per slide. Keeping the coordinates here means the
+   HTML stays readable and nothing carries a style attribute.
+   ============================================================ */
+
+/* Slide 1 — cover */
+#slide-1 .ghost {
+   width: 46vw;
+   height: 46vw;
+   right: -10vw;
+   bottom: -14vw;
+}
+
+#slide-1 .doodle--wave {
+   top: 12%;
+   right: 14%;
+}
+
+#slide-1 .blob-out {
+   width: 150px;
+   height: 150px;
+   left: 6%;
+   bottom: 16%;
+}
+
+/* Slide 2 */
+#slide-2 .doodle--star {
+   top: 10%;
+   left: 6%;
+}
+
+/* Slide 3 */
+#slide-3 .blob-fill {
+   width: 90px;
+   height: 90px;
+   left: 4%;
+   bottom: 12%;
+}
+
+/* Slide 4 */
+#slide-4 .doodle--arrow {
+   bottom: 14%;
+   left: 8%;
+}
+
+/* Slide 5 */
+#slide-5 .blob-out {
+   width: 110px;
+   height: 110px;
+   right: 3%;
+   top: 8%;
+}
+
+/* Slide 6 */
+#slide-6 .doodle--rings {
+   top: 10%;
+   left: 3%;
+}
+
+/* Slide 7 */
+#slide-7 .ghost {
+   width: 34vw;
+   height: 34vw;
+   left: -10vw;
+   top: -10vw;
+}
+
+/* Slide 8 */
+#slide-8 .blob-fill {
+   width: 70px;
+   height: 70px;
+   right: 3%;
+   bottom: 12%;
+}
+
+/* Slide 9 */
+#slide-9 .doodle--squiggle {
+   bottom: 8%;
+   left: 4%;
+}
+
+/* Slide 10 */
+#slide-10 .blob-out {
+   width: 130px;
+   height: 130px;
+   left: 2%;
+   top: 12%;
+}
+
+/* Slide 11 — closing */
+#slide-11 .ghost {
+   width: 44vw;
+   height: 44vw;
+   right: -12vw;
+   top: -10vw;
+}
+
+#slide-11 .doodle--wave-long {
+   bottom: 18%;
+   left: 8%;
+}
+
+#slide-11 .blob-fill {
+   width: 110px;
+   height: 110px;
+   right: 12%;
+   bottom: 20%;
+}
