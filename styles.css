@@ -39,6 +39,32 @@ body {
    line-height: 1.7;
 }
 
+
+/* Links in a caption. The underline is drawn as a background,
+   so it can grow on hover without moving the text. */
+a.t-caption {
+   display: inline-block;
+   color: var(--ink);
+   text-decoration: none;
+   background-image: linear-gradient(var(--ink), var(--ink));
+   background-repeat: no-repeat;
+   background-position: 0 100%;
+   background-size: 100% 2px;
+   transition: background-size 0.2s ease, color 0.2s ease;
+}
+
+a.t-caption:hover {
+   background-size: 100% 100%;
+   color: var(--bg);
+}
+
+/* An external link opens a new tab, so say so out loud. */
+a.t-caption[target="_blank"]::after {
+   content: " ↗";
+   /* The arrow is decoration, the sr-only text carries the meaning. */
+   speak: never;
+}
+
 /* ============================================================
    2. TYPE SCALE
    Syne for every display moment, always with negative tracking.
@@ -64,7 +90,7 @@ body {
 
 /* Subtitle under the cover title: same face, smaller step. */
 .t-headline--sub {
-   font-size: clamp(1.3rem, 2.2vw, 2rem);
+   font-size: clamp(1.5rem, 2.8vw, 5.5rem);
    font-weight: 700;
    line-height: 1.15;
    margin: 1.25rem 0 0;
@@ -310,31 +336,58 @@ figure {
    Hand-drawn punctuation in the negative space.
    Decorative only, so hidden from screen readers.
    ============================================================ */
-.doodle {
+.afraid {
    position: absolute;
    z-index: 1;
-   pointer-events: none;
+   max-width: 5vw;
 }
 
-.doodle svg {
-   stroke: var(--ink);
-   stroke-width: 2;
-   fill: none;
-   stroke-linecap: round;
-}
 
 .blob-out {
    position: absolute;
-   border: 3px solid var(--ink);
-   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+
    pointer-events: none;
    z-index: 1;
+}
+
+.iconsframe {
+   display: flex;
+   flex-direction: row;
+   gap: 10%;
+   align-items: center;
+   z-index: 1;
+   position: absolute;
+   margin-top: 10%;
+
+}
+
+.icon {
+   max-width: 5vw;
+   z-index: 1;
+   right: -1.5rem;
+   top: 50%;
+   
+}
+
+.jsx {
+   max-width: 5vw;
+   z-index: 1;
+   right: 20%;
+   top: 50%;
+   
+}
+
+.heart {
+   max-width: 10vw;
+   z-index: 1;
+   right: 20%;
+   top: 50%;
+   
 }
 
 .blob-fill {
    position: absolute;
-   background: var(--ink);
-   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  
    pointer-events: none;
    z-index: 1;
 }
@@ -474,6 +527,18 @@ figure {
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
    }
+
+
+      /* No fall: everyone is simply there, in place, from the start. */
+   .drop__item {
+      opacity: 1;
+      transform: rotate(var(--tilt));
+   }
+
+   .is-dropped .drop__item,
+   .is-dropped .drop__item img {
+      animation: none;
+   }
 }
 
 /* ============================================================
@@ -483,31 +548,29 @@ figure {
    ============================================================ */
 
 /* Slide 1 — cover */
+
+/* Small reaction mark, up and left of the title. */
+#slide-1 .afraid {
+   top: 16%;
+   left: 78%;
+   width: 124px;
+}
+
+/* Big anchor, bottom right, sitting inside the ghost blob. */
+#slide-1 .accessibility {
+   width: 100px;
+   height: auto;
+   right: 100%;
+   bottom: 18%;
+}
+
+/* Smaller blob so it frames the icon instead of eating the slide. */
 #slide-1 .ghost {
-   width: 46vw;
-   height: 46vw;
-   right: -10vw;
-   bottom: -14vw;
+   width: 34vw;
+   height: 34vw;
+   right: -6vw;
+   bottom: -8vw;
 }
-
-#slide-1 .doodle--wave {
-   top: 12%;
-   right: 14%;
-}
-
-#slide-1 .blob-out {
-   width: 150px;
-   height: 150px;
-   left: 6%;
-   bottom: 16%;
-}
-
-/* Slide 2 */
-#slide-2 .doodle--star {
-   top: 10%;
-   left: 6%;
-}
-
 /* Slide 3 */
 #slide-3 .blob-fill {
    width: 90px;
@@ -584,4 +647,290 @@ figure {
    height: 110px;
    right: 12%;
    bottom: 20%;
+}
+
+/* ============================================================
+   14. CLOSING SLIDE LAYOUT
+   The heading sits above the hearts and stays near the top,
+   otherwise the rain lands right on it.
+   ============================================================ */
+#slide-11 .slide__inner {
+   position: absolute;
+   top: clamp(2rem, 8vh, 6rem);
+   left: 0;
+   right: 0;
+   /* Above .drop (z-index 3) and .confetti (z-index 1). */
+   z-index: 5;
+   pointer-events: none;
+}
+
+
+/* ============================================================
+   15. CLOSING DROP
+   Portraits fall in one after the other, 2 seconds after the
+   last slide appears. The delay is handled in deck.js.
+   ============================================================ */
+/* .drop {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   align-items: center;
+   gap: clamp(1rem, 3vw, 2.5rem);
+   list-style: none;
+   margin: clamp(2rem, 5vh, 3.5rem) 0 0;
+   padding: 0;
+}
+
+.drop__item {
+   width: clamp(90px, 11vw, 150px);
+   transform: translateY(-120vh);
+}
+
+.heart-photo {
+   display: block;
+   width: 100%;
+   aspect-ratio: 1;
+   object-fit: cover;
+   clip-path: url(#heart);
+}
+
+.drop__item--logo img {
+   display: block;
+   width: 100%;
+   height: auto;
+}
+
+.is-dropped .drop__item {
+   animation: drop-in 0.8s cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
+}
+
+
+.is-dropped .drop__item:nth-child(2) {
+   animation-delay: 0.18s;
+}
+
+.is-dropped .drop__item:nth-child(3) {
+   animation-delay: 0.36s;
+}
+
+.is-dropped .drop__item:nth-child(4) {
+   animation-delay: 0.54s;
+}
+
+@keyframes drop-in {
+   0% {
+      opacity: 0;
+      transform: translateY(-120vh) rotate(-10deg);
+   }
+
+   60% {
+      opacity: 1;
+   }
+
+   100% {
+      opacity: 1;
+      transform: translateY(0) rotate(0deg);
+   }
+} */
+
+/* ============================================================
+   15. CLOSING DROP
+   Kitsch heart rain. Each item gets its own position, size,
+   tilt, delay and speed through custom properties, so nothing
+   falls in sync and nothing lands in the same spot.
+   ============================================================ */
+:root {
+   --pink: #ff3d8b;
+   --pink-soft: #ffa8cd;
+}
+
+/* The list covers the whole slide, behind nothing, above the
+   blob. pointer-events: none so it never blocks the nav buttons. */
+.drop {
+   position: absolute;
+   inset: 0;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   pointer-events: none;
+   z-index: 3;
+}
+
+.drop__item {
+   position: absolute;
+   left: var(--x);
+   top: var(--y);
+   width: var(--size);
+   /* Resting state: far above the screen, invisible. */
+   opacity: 0;
+   transform: translateY(-130vh);
+}
+
+.heart-photo {
+   display: block;
+   width: 100%;
+   aspect-ratio: 1;
+   object-fit: cover;
+   clip-path: url(#heart);
+   /* Stacked drop-shadows follow the heart outline, unlike a
+      border which would follow the square. Four of them draw a
+      pink edge, the fifth adds the glow. */
+   filter:
+      drop-shadow(2px 0 0 var(--pink))
+      drop-shadow(-2px 0 0 var(--pink))
+      drop-shadow(0 2px 0 var(--pink))
+      drop-shadow(0 -2px 0 var(--pink))
+      drop-shadow(0 0 22px var(--pink-soft));
+}
+
+.drop__item--logo img {
+   display: block;
+   width: 100%;
+   height: auto;
+   filter: drop-shadow(0 0 18px var(--pink-soft));
+}
+
+/* .is-dropped is added by deck.js, 2s after the slide is shown. */
+.is-dropped .drop__item {
+   animation: var(--fall) var(--dur) var(--delay) cubic-bezier(0.28, 1.3, 0.6, 1) forwards;
+}
+
+/* Heartbeat once landed. On the img, not the li, so the two
+   animations never fight over the same transform. */
+.is-dropped .drop__item img {
+   animation: beat 1.4s var(--delay) infinite ease-in-out;
+   animation-delay: calc(var(--delay) + var(--dur));
+}
+
+/* --- Two fall paths, so neighbours never move alike --------- */
+@keyframes fall-left {
+   0% { opacity: 0; transform: translate(-6vw, -130vh) rotate(-25deg) scale(0.5); }
+   12% { opacity: 1; }
+   62% { transform: translate(1vw, 5vh) rotate(12deg) scale(1.12); }
+   78% { transform: translate(-1vw, -2vh) rotate(-8deg) scale(0.95); }
+   90% { transform: translate(0.4vw, 1vh) rotate(4deg) scale(1.04); }
+   100% { opacity: 1; transform: translate(0, 0) rotate(var(--tilt)) scale(1); }
+}
+
+@keyframes fall-right {
+   0% { opacity: 0; transform: translate(7vw, -130vh) rotate(30deg) scale(0.4); }
+   12% { opacity: 1; }
+   58% { transform: translate(-1.5vw, 7vh) rotate(-15deg) scale(1.18); }
+   76% { transform: translate(1vw, -3vh) rotate(9deg) scale(0.92); }
+   91% { transform: translate(-0.4vw, 1.5vh) rotate(-4deg) scale(1.05); }
+   100% { opacity: 1; transform: translate(0, 0) rotate(var(--tilt)) scale(1); }
+}
+
+@keyframes beat {
+   0%, 100% { transform: scale(1); }
+   18% { transform: scale(1.09); }
+   36% { transform: scale(1); }
+   54% { transform: scale(1.05); }
+}
+
+/* --- One rule per item: position, size, tilt, timing -------- */
+.drop__item:nth-child(1) { --x: 6%;  --y: 40%; --size: 9vw;   --tilt: -8deg; --delay: 0s;    --dur: 1.1s;  --fall: fall-left; }
+.drop__item:nth-child(2) { --x: 76%; --y: 26%; --size: 7.5vw; --tilt: 6deg;  --delay: 0.18s; --dur: 1.35s; --fall: fall-right; }
+.drop__item:nth-child(3) { --x: 18%; --y: 63%; --size: 10vw;  --tilt: 5deg;  --delay: 0.34s; --dur: 0.95s; --fall: fall-right; }
+.drop__item:nth-child(4) { --x: 64%; --y: 68%; --size: 8vw;   --tilt: -11deg;--delay: 0.55s; --dur: 1.25s; --fall: fall-left; }
+.drop__item:nth-child(5) { --x: 42%; --y: 30%; --size: 6.5vw; --tilt: 9deg;  --delay: 0.72s; --dur: 1.05s; --fall: fall-right; }
+.drop__item:nth-child(6) { --x: 80%; --y: 46%; --size: 7vw;   --tilt: -6deg; --delay: 0.9s;  --dur: 1.4s;  --fall: fall-left; }
+.drop__item:nth-child(7) { --x: 24%; --y: 58%; --size: 6vw;   --tilt: 12deg; --delay: 1.08s; --dur: 1.15s; --fall: fall-left; }
+.drop__item:nth-child(8) { --x: 38%; --y: 78%; --size: 8.5vw; --tilt: -4deg; --delay: 1.26s; --dur: 1s;    --fall: fall-right; }
+
+.confetti {
+   position: absolute;
+   inset: 0;
+   pointer-events: none;
+   z-index: 1;
+}
+
+.confetti span {
+   position: absolute;
+   top: -12vh;
+   font-size: clamp(1.5rem, 3vw, 3rem);
+   opacity: 0;
+}
+
+.is-dropped .confetti span {
+   animation: rain 4s linear infinite;
+}
+
+.confetti span:nth-child(1) { left: 12%; animation-delay: 0.2s; }
+.confetti span:nth-child(2) { left: 27%; animation-delay: 1.1s; }
+.confetti span:nth-child(3) { left: 41%; animation-delay: 0.6s; }
+.confetti span:nth-child(4) { left: 55%; animation-delay: 1.8s; }
+.confetti span:nth-child(5) { left: 68%; animation-delay: 0.9s; }
+.confetti span:nth-child(6) { left: 79%; animation-delay: 2.3s; }
+.confetti span:nth-child(7) { left: 91%; animation-delay: 1.5s; }
+.confetti span:nth-child(8) { left: 4%;  animation-delay: 2.8s; }
+
+@keyframes rain {
+   0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+   10% { opacity: 1; }
+   90% { opacity: 1; }
+   100% { opacity: 0; transform: translateY(115vh) rotate(320deg); }
+}
+
+/* Pause control. Bottom left, away from the slide nav. */
+.drop-toggle {
+   position: absolute;
+   left: clamp(1rem, 3vw, 3rem);
+   bottom: 1.75rem;
+   z-index: 10;
+   padding: 0.6rem 1.1rem;
+   border: 2px solid var(--ink);
+   background: var(--bg);
+   color: var(--ink);
+   font-family: var(--body);
+   font-size: 0.85rem;
+   font-weight: 600;
+   letter-spacing: 0.05em;
+   cursor: pointer;
+}
+
+.drop-toggle:hover {
+   background: var(--ink);
+   color: var(--bg);
+}
+
+/* Asterisk in the title. Smaller and lighter than the display
+   type, so it reads as a footnote marker and not as a letter. */
+.star {
+   font-size: 0.45em;
+   font-weight: 700;
+   vertical-align: super;
+   letter-spacing: 0;
+}
+
+/* Legend for the asterisk, running up the right edge.
+   .spine already handles the rotation and the display face. */
+.spine--legend {
+   font-size: 0.9rem;
+   font-weight: 600;
+   font-family: var(--body);
+   letter-spacing: 0.08em;
+   right: -6rem;
+}
+
+/* One class freezes every animation on the slide. */
+.is-paused .drop__item,
+.is-paused .drop__item img,
+.is-paused .confetti span,
+.is-paused #s11 {
+   animation-play-state: paused;
+}
+
+.drop-toggle {
+   display: none;
+}
+
+.is-dropped .drop-toggle {
+   display: block;
+   animation: fade-in 0.4s 1.5s ease forwards;
+   opacity: 0;
+}
+
+@keyframes fade-in {
+   to { opacity: 1; }
 }

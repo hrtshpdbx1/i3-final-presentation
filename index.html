@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!-- lang="fr": the whole deck is in French.
-     Screen readers use this to pick the right voice. RGAA 8.3 -->
 <html lang="fr">
 
 <head>
@@ -16,44 +14,41 @@
     rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
-  <!-- defer: the script runs after the HTML is parsed, so the slides exist. -->
   <script src="deck.js" defer></script>
 </head>
 
 <body>
+  <svg class="sr-only" aria-hidden="true" focusable="false">
+    <defs>
+      <clipPath id="heart" clipPathUnits="objectBoundingBox">
+        <path
+          d="M.5 1C.5 1 0 .66 0 .35 0 .15.15.02.3.02.4.02.47.08.5.15.53.08.6.02.7.02.85.02 1 .15 1 .35 1 .66.5 1 .5 1Z" />
+      </clipPath>
+    </defs>
+  </svg>
 
-  <!-- Live region: announces the slide number after every change.
-       Mounted empty from the start, because a screen reader only
-       reads a region it was already watching. -->
   <p class="sr-only" role="status" aria-live="polite" id="announcer"></p>
 
   <main id="deck">
 
     <!-- 1 — Couverture -->
-    <!-- aria-labelledby takes two ids: the slide is named by the title
-         AND its subtitle. Each id must be unique in the whole page. -->
-    <section class="slide slide--cover active" id="slide-1" tabindex="-1" aria-labelledby="s1 s1-sub">
-      <div class="ghost" aria-hidden="true"></div>
-      <div class="doodle doodle--wave" aria-hidden="true">
-        <svg width="120" height="70" viewBox="0 0 120 70">
-          <path d="M5 45 Q 25 5, 45 45 T 85 45 T 115 30" />
-        </svg>
-      </div>
-      <div class="blob-out" aria-hidden="true"></div>
+<section class="slide slide--cover active" id="slide-1" tabindex="-1" aria-labelledby="s1 s1-sub">
+  <div class="ghost" aria-hidden="true"></div>
+  <img src="icon/afraid.png" class="afraid" alt="" aria-hidden="true">
 
-      <div class="slide__inner">
-        <h1 class="t-display-hero" id="s1">WCAGnnn</h1>
-        <h2 class="t-headline t-headline--sub" id="s1-sub">Ce que j'ai appris sur la réalité du web accessible.</h2>
-        <p class="t-eyebrow t-eyebrow--under">Présentation de fin de formation · Interface3 · septembre 2026</p>
-      </div>
-    </section>
+  <p class="spine spine--legend">*Web Content Accessibility Guidelines</p>
 
+  <div class="slide__inner">
+   <h1 class="t-display-hero" id="s1">WCAG<span class="star" aria-hidden="true">*</span>nnn</h1>
+    <h2 class="t-headline t-headline--sub" id="s1-sub">
+      Ce que j'ai appris<br>sur la réalité du web accessible.
+    </h2>
+    <p class="t-eyebrow t-eyebrow--under">Interface3 · septembre 2026</p>
+  </div>
+</section>
     <!-- 2 — Ce que je croyais savoir -->
     <section class="slide" id="slide-2" tabindex="-1" aria-labelledby="s2">
-      <div class="doodle doodle--star" aria-hidden="true">
-        <svg width="70" height="70" viewBox="0 0 70 70">
-          <path d="M35 5 L42 26 L64 26 L46 39 L53 61 L35 47 L17 61 L24 39 L6 26 L28 26 Z" />
-        </svg>
+    
       </div>
 
       <div class="slide__inner split">
@@ -69,16 +64,22 @@
 
     <!-- 3 — Une application React, c'est quoi ? -->
     <section class="slide" id="slide-3" tabindex="-1" aria-labelledby="s3">
-      <div class="blob-fill" aria-hidden="true"></div>
-
       <div class="slide__inner split">
         <div>
-          <h2 class="t-headline" id="s3">Une application React, c'est quoi ?</h2>
+          <h2 class="t-headline" id="s3">Une SPA, c'est quoi ?</h2>
           <p class="t-body-md">
             Une seule page dont on remplace le contenu à la volée. Des composants apparaissent
             et disparaissent, sans que la page ne se recharge jamais.
           </p>
+
+
+          <div class="iconsframe">
+            <img src="icon/vuejs.png" class="icon" aria-hidden="true" class="icon"></img>
+            <img src="icon/angular-svgrepo-com.svg" aria-hidden="true" class="icon"></img>
+            <img src="icon/react.png" aria-hidden="true" class="icon"></img>
+          </div>
         </div>
+
         <figure class="frame frame--light">
           <img src="img/spa-vs-classique.jpg" width="1200" height="1076"
             alt="Schéma comparatif. À gauche, SPA : seule une zone de la page se recharge, marquée par une flèche circulaire. À droite, site web classique : toute la page se recharge d'un bloc.">
@@ -89,22 +90,19 @@
     <!-- 4 — Ce que les tests révèlent -->
     <section class="slide" id="slide-4" tabindex="-1" aria-labelledby="s4">
       <div class="doodle doodle--arrow" aria-hidden="true">
-        <svg width="110" height="50" viewBox="0 0 110 50">
-          <path d="M5 25 H 92" />
-          <path d="M78 10 L 95 25 L 78 40" />
-        </svg>
+
       </div>
 
       <div class="slide__inner split">
         <div>
           <h2 class="t-headline" id="s4">Ce que les tests révèlent</h2>
-          <!-- One card only: the logo sits next to the name it labels.
-               A second, separate figure left the logo floating alone. -->
+
           <div class="rough rough--inline">
             <img class="logo" src="img/NVDA_Logo.png" width="100" height="100" alt="Logo du lecteur d'écran NVDA">
             <p class="t-body-md t-body-md--flush">NonVisual Desktop Access (NVDA)</p>
           </div>
         </div>
+
         <figure class="frame frame--tall">
           <img src="img/meme-beckham.jpg" width="800" height="1000"
             alt="Meme en six vignettes représentant le couple Beckham. « Our app is fully accessible. » « How many user tests did you do ? » « We are 100 % WCAG 2.1 AA compliant. » « How many user test ? » « None. » « Thanks you. »">
@@ -120,14 +118,10 @@
         <div>
           <p class="t-eyebrow">Démo 1 : navigation avec NVDA</p>
           <h2 class="t-headline" id="s5">Sur un site classique</h2>
-          <p class="t-caption">Belgium.be (multi page HTML)</p>
+
+<a class="t-caption" href="https://www.belgium.be/nl" target="_blank" rel="noopener"> Belgium.be (multi page HTML)<span class="sr-only"> (nouvelle fenêtre)</span> </a>
         </div>
         <figure class="frame">
-          <!-- controls: the browser player is keyboard accessible out of the box.
-               preload="auto": download now, not when I press play, so there is
-               no loading spinner in front of the room.
-               poster: a still frame instead of a black rectangle.
-               No autoplay: I decide when each clip starts. -->
           <video src="demos/Demo1_NVDA_Multipage2.mp4" poster="media/poster-demo1.jpg" controls preload="auto"
             aria-labelledby="s5"></video>
         </figure>
@@ -136,17 +130,15 @@
 
     <!-- 6 — Sur un App React … -->
     <section class="slide" id="slide-6" tabindex="-1" aria-labelledby="s6">
-      <div class="doodle doodle--rings" aria-hidden="true">
-        <svg width="80" height="80" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r="32" />
-          <circle cx="40" cy="40" r="18" />
-        </svg>
-      </div>
+
 
       <div class="slide__inner split split--media">
         <div>
           <h2 class="t-headline" id="s6">Sur un App React …</h2>
-          <p class="t-caption">chat.maite.tech</p>
+       <a class="t-caption" href="https://chat.maite.tech/" target="_blank" rel="noopener">
+  chat.maite.tech<span class="sr-only"> (nouvelle fenêtre)</span>
+</a>
+
         </div>
         <figure class="frame">
           <video src="demos/Demo1_NVDA_SPA.mp4" poster="media/poster-demo2.jpg" controls preload="auto"
@@ -157,7 +149,7 @@
 
     <!-- 7 — RouteAnnouncer -->
     <section class="slide" id="slide-7" tabindex="-1" aria-labelledby="s7">
-      <p class="spine" aria-hidden="true">RouteAnnouncer</p>
+      <p class="spine" aria-hidden="true">scr/a11y/RouteAnnouncer.jsx</p>
       <div class="ghost" aria-hidden="true"></div>
 
       <div class="slide__inner slide__inner--narrow">
@@ -165,8 +157,11 @@
         <figure class="frame frame--light frame--code">
           <img src="img/code-routeannouncer.png" width="1546" height="841"
             alt="Capture de l'éditeur montrant le composant RouteAnnouncer : useLocation détecte le changement d'URL, un useRef ignore le chargement initial, un requestAnimationFrame attend une image avant de lire document.title, et le composant retourne un paragraphe sr-only avec role status et aria-live polite.">
+
         </figure>
+
       </div>
+      <!-- <img src="icon/jsx.png" class="jsx" aria-hidden="true"> -->
     </section>
 
     <!-- 8 — Démo 2, clip 1 -->
@@ -188,9 +183,6 @@
     <!-- 9 — Démo 2, clip 2 -->
     <section class="slide" id="slide-9" tabindex="-1" aria-labelledby="s9">
       <div class="doodle doodle--squiggle" aria-hidden="true">
-        <svg width="130" height="40" viewBox="0 0 130 40">
-          <path d="M5 20 Q 20 2, 35 20 T 65 20 T 95 20 T 125 20" />
-        </svg>
       </div>
 
       <div class="slide__inner split split--media">
@@ -210,7 +202,8 @@
       <div class="blob-out" aria-hidden="true"></div>
 
       <div class="slide__inner slide__inner--narrow">
-        <h2 class="t-headline t-headline--spaced" id="s10">Démo 3 : L'Attribut Lang et la Voix</h2>
+        <p class="t-eyebrow">Démo 3 : Gestion des langues
+        <h2 class="t-headline t-headline--spaced" id="s10">L'Attribut lang=" "</h2>
         <figure class="frame frame--wide">
           <video src="demos/Demo3_attribut lang full.mp4" poster="media/poster-lang.jpg" controls preload="auto"
             aria-labelledby="s10"></video>
@@ -218,20 +211,35 @@
       </div>
     </section>
 
-    <!-- 11 — Merci -->
-    <section class="slide slide--cover" id="slide-11" tabindex="-1" aria-labelledby="s11">
-      <div class="ghost" aria-hidden="true"></div>
-      <div class="doodle doodle--wave-long" aria-hidden="true">
-        <svg width="150" height="80" viewBox="0 0 150 80">
-          <path d="M5 60 Q 30 5, 55 55 T 105 40 T 145 55" />
-        </svg>
-      </div>
-      <div class="blob-fill" aria-hidden="true"></div>
+  <!-- 11 — Merci -->
+<section class="slide slide--cover" id="slide-11" tabindex="-1" aria-labelledby="s11" data-drop>
+  <div class="ghost" aria-hidden="true"></div>
 
-      <div class="slide__inner">
-        <h2 class="t-display" id="s11">Merci de votre écoute !</h2>
-      </div>
-    </section>
+
+  <div class="slide__inner slide__inner--centered">
+    <h2 class="t-display" id="s11">Merci</h2>
+  </div>
+
+  <div class="confetti" aria-hidden="true">
+    <span>💗</span><span>💖</span><span>💕</span><span>💗</span>
+    <span>💘</span><span>💞</span><span>💖</span><span>💕</span>
+  </div>
+
+  <ul class="drop" aria-label="Merci à toute l'équipe">
+    <li class="drop__item"><img class="heart-photo" src="img/sonia.jpg" alt="Sonia"></li>
+    <li class="drop__item"><img class="heart-photo" src="img/aude.png" alt="Aude"></li>
+    <li class="drop__item"><img class="heart-photo" src="img/thomas.jpg" alt="Thomas"></li>
+    <li class="drop__item"><img class="heart-photo" src="img/bastien.jpg" alt="Bastien"></li>
+    <li class="drop__item"><img class="heart-photo" src="img/images.jpg" alt="Interface3"></li>
+    <li class="drop__item"><img class="heart-photo" src="img/aurelien.jpg" alt="Aurélien"></li>
+    <li class="drop__item"><img class="heart-photo" src="img/bstorm.jpg" alt="BeCode Storm"></li>
+    <li class="drop__item"><img class="heart-photo" src="img/laure.jpg" alt="Laure"></li>
+  </ul>
+
+  <button type="button" class="drop-toggle" id="drop-toggle" aria-pressed="false">
+    Mettre l'animation en pause
+  </button>
+</section>
 
   </main>
 

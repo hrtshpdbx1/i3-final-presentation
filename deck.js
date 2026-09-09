@@ -11,6 +11,22 @@ const count = document.getElementById('count');
 const progress = document.getElementById('progress');
 let index = 0;
 
+// --- Closing drop -------------------------------------------
+// The portraits fall 2s after the slide is shown, not on page
+// load. The class is removed when we leave, so it plays again
+// if I come back to the slide.
+let dropTimer = null;
+
+function handleDrop() {
+  clearTimeout(dropTimer);
+  slides.forEach((s) => s.classList.remove('is-dropped'));
+
+  const current = slides[index];
+  if (!current.hasAttribute('data-drop')) return;
+
+  dropTimer = setTimeout(() => current.classList.add('is-dropped'), 2000);
+}
+
 function render() {
   slides.forEach((slide, i) => {
     slide.classList.toggle('active', i === index);
@@ -28,6 +44,9 @@ function render() {
   slides[index].focus();
 
   announcer.textContent = `Diapositive ${index + 1} sur ${slides.length}`;
+
+  // Trigger the closing animation if this slide has data-drop.
+  handleDrop();
 }
 
 function go(step) {
@@ -60,6 +79,22 @@ document.addEventListener('touchend', (e) => {
   const delta = e.changedTouches[0].clientX - startX;
   if (Math.abs(delta) > 60) go(delta < 0 ? 1 : -1);
   startX = null;
+});
+
+// --- Pause control ------------------------------------------
+// Motion that lasts more than 5s needs a way to stop it.
+// WCAG 2.2.2. animation-play-state freezes everything in place
+// instead of resetting it, so nothing jumps when I resume.
+const dropToggle = document.getElementById('drop-toggle');
+const closingSlide = document.querySelector('[data-drop]');
+
+dropToggle.addEventListener('click', () => {
+  const paused = closingSlide.classList.toggle('is-paused');
+
+  dropToggle.setAttribute('aria-pressed', String(paused));
+  dropToggle.textContent = paused
+    ? "Relancer l'animation"
+    : "Mettre l'animation en pause";
 });
 
 render();
